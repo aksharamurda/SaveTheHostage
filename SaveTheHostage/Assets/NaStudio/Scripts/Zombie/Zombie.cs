@@ -97,6 +97,7 @@ namespace NaStd
             }
         }
 
+
         void LateUpdate()
         {
             if (m_UseFov)
@@ -109,10 +110,7 @@ namespace NaStd
                     {
                         StopAllCoroutines();
                         StartCoroutine(TurnToFace(m_VisibleTargets[0].position));
-                        //m_Animator.SetTrigger("Shoot");
                         navAgent.SetDestination(m_VisibleTargets[0].position);
-                        Debug.Log("Player Detect");
-                        
                     }
                     else
                     {
@@ -123,11 +121,11 @@ namespace NaStd
                 {
                     if (m_CanSeePlayer)
                     {
+
                         StopAllCoroutines();
                         StartCoroutine(TurnToFace(m_VisibleTargets[0].position));
-                        //m_Animator.SetTrigger("Shoot");
                         navAgent.SetDestination(m_VisibleTargets[0].position);
-                        Debug.Log("Player Detect");
+
                     }
                     else
                     {
@@ -137,13 +135,18 @@ namespace NaStd
 
             }
 
-
             if (m_CanSeePlayer)
             {
-                if (navAgent.remainingDistance > navAgent.stoppingDistance)
+                float dist = Vector3.Distance(transform.position, m_VisibleTargets[0].position);
+                //Debug.Log(dist);
+                if (dist < 1f)
                 {
                     m_Animator.SetTrigger("isAttack");
                     m_Animator.SetBool("isMove", false);
+                }
+                else
+                {
+                    m_Animator.SetBool("isMove", true);
                 }
             }
 
@@ -228,7 +231,7 @@ namespace NaStd
                 yield return null;
             }
 
-            m_Animator.SetBool("isMove", true);
+            //m_Animator.SetBool("isMove", true);
         }
 
         void FindVisibleTargets()
