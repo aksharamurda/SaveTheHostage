@@ -34,6 +34,8 @@ namespace NaStd
         {
             zombie = (Zombie)target;
 
+            zombie.damageZombie = EditorGUILayout.FloatField("Damage", zombie.damageZombie);
+
             #region TOGGLE_USE_FOV
             //TOGGLE USE FOV
             EditorGUILayout.BeginVertical("Box");

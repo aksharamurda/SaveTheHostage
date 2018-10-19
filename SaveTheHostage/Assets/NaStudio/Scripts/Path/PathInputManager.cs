@@ -6,7 +6,7 @@ namespace NaStd
 {
     public class PathInputManager : MonoBehaviour
     {
-
+        public static PathInputManager instance;
         private GameObject[] destObject;
         private GameObject[] objectOnPath;
 
@@ -30,6 +30,8 @@ namespace NaStd
 
         void Awake()
         {
+            instance = this;
+
 #if UNITY_IPHONE
 		usingMouse = false;
 		maxTouches = 5;

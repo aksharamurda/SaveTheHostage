@@ -36,6 +36,9 @@ namespace NaStd
         public void PathFollowerTapped()
         {
             MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
+            if (mr == null)
+                return;
+
             if (mr.material.color == Color.blue)
             {
                 mr.material.color = Color.green;
@@ -47,6 +50,10 @@ namespace NaStd
             Debug.Log("Path Follower was tapped, path not modified");
         }
 
+        public void SetHasDestination()
+        {
+            hasDestination = false;
+        }
 
         void Update()
         {

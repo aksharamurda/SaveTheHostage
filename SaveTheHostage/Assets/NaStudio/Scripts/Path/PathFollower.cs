@@ -18,7 +18,10 @@ namespace NaStd
         private int currentNode;
 
         private LineRenderer pathLine;
-        private Animator m_Animator;
+        [HideInInspector]
+        public Animator m_Animator;
+        [HideInInspector]
+        public Path path;
 
         private bool pathLineEnabled
         {
@@ -47,6 +50,20 @@ namespace NaStd
             pathLineEnabled = false;
 
             m_Animator = GetComponent<Animator>();
+            path = GetComponent<Path>();
+        }
+
+
+        public void isDead()
+        {
+            currentNode = 0;
+            pathLineEnabled = false;
+            hasPath = false;
+            Destroy(destObject);
+
+            SendMessage("PathComplete", SendMessageOptions.DontRequireReceiver);
+            currentPath.Clear();
+            path.SetHasDestination();
         }
 
         void Update()
@@ -85,7 +102,6 @@ namespace NaStd
 
         public void MoverMoveComplete()
         {
-
             if (currentNode == currentPath.Count - 1)
             {
                 currentPath.Clear();

@@ -15,6 +15,8 @@ namespace NaStd
     [RequireComponent(typeof(NavMeshAgent))]
     public class Zombie : MonoBehaviour
     {
+        public float damageZombie = 50;
+
         public float m_ViewRadius = 8;
         [Range(0, 360)]
         public float m_ViewAngle = 60;
@@ -76,7 +78,7 @@ namespace NaStd
 
             if (m_EnemyType == EnemyType.PATROL)
             {
-                m_Animator.SetBool("isPatrol", true);
+                m_Animator.SetBool("isMove", true);
 
                 if (m_PathRoot != null)
                 {
@@ -92,7 +94,7 @@ namespace NaStd
             }
             else
             {
-                //m_Animator.SetBool("isPatrol", false);
+                m_Animator.SetBool("isMove", false);
                 StartCoroutine(LoopRotation(m_RotateAngleStart, m_RotateAngleEnd, m_TimeToWait));
             }
         }
@@ -152,6 +154,11 @@ namespace NaStd
 
         }
 
+        public void OnAttack()
+        {
+            m_VisibleTargets[0].SendMessage("TakeDamage", damageZombie , SendMessageOptions.DontRequireReceiver);
+        }
+
         IEnumerator LoopRotation(float angleStart, float angleEnd, float waitTime)
         {
             var degreesPerRotation = 0f;
@@ -205,15 +212,22 @@ namespace NaStd
             while (true)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, m_PathSpeed * Time.deltaTime);
+                Vector3 vecPos = transform.position;
+                vecPos.y = 0;
+                transform.position = vecPos;
+
+                //Debug.Log(transform.position + " | " + targetWaypoint);
                 if (transform.position == targetWaypoint)
                 {
-                    //m_Animator.SetBool("isPatrol", false);
+                    m_Animator.SetBool("isMove", false);
                     targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
                     targetWaypoint = waypoints[targetWaypointIndex];
 
                     yield return new WaitForSeconds(m_PathWaitTime);
-
+                    
                     yield return StartCoroutine(TurnToFace(targetWaypoint));
+
+                    m_Animator.SetBool("isMove", true);
                 }
                 yield return null;
             }
