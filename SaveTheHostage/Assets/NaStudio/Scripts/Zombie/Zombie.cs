@@ -2,15 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Zombie : MonoBehaviour {
+namespace NaStd
+{
+    public class Zombie : MonoBehaviour
+    {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        public LayerMask attackLayers;
+        public Transform targetHostage;
+
+        void Start()
+        {
+
+        }
+
+        void Update()
+        {
+            Vector3 posOrigin = transform.position;
+            RaycastHit hit;
+            if (Physics.SphereCast(posOrigin, 0.5f, transform.forward, out hit, 0.5f, attackLayers))
+            {
+                if(targetHostage == null)
+                {
+                    hit.transform.SendMessage("ZombieCatchMe", SendMessageOptions.DontRequireReceiver);
+                    targetHostage = hit.transform;
+                }
+
+            }
+        }
+
+    }
 }

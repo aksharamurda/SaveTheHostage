@@ -19,7 +19,6 @@ namespace NaStd
 
         private LineRenderer pathLine;
         private Animator m_Animator;
-        private Player player;
 
         private bool pathLineEnabled
         {
@@ -48,13 +47,11 @@ namespace NaStd
             pathLineEnabled = false;
 
             m_Animator = GetComponent<Animator>();
-            player = GetComponent<Player>();
         }
 
         void Update()
         {
-            //m_Animator.SetBool("isRun", pathLineEnabled);
-            player.isRun(pathLineEnabled);
+            m_Animator.SetBool("isRun", pathLineEnabled);
         }
 
         void OnDisable()
