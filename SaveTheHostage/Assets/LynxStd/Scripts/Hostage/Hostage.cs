@@ -6,12 +6,7 @@ namespace NaStd
 {
     public class Hostage : MonoBehaviour
     {
-        public void ZombieCatchMe()
-        {
-            Debug.Log("Zombie Catch Me!");
-        }
-
-        public void PlayerSaveMe()
+        public void OnPickItem()
         {
             Debug.Log("Player Save Me!");
             Destroy(gameObject, 1f);

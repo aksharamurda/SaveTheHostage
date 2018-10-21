@@ -8,7 +8,7 @@ namespace NaStd
     {
         public float healthAmount = 100;
         public bool isDead;
-        public LayerMask hostageLayers;
+        public LayerMask pickLayers;
         public LayerMask doorLayers;
         private CharacterController characterController;
         private PathFollower pathFollower;
@@ -22,15 +22,11 @@ namespace NaStd
         {
             Vector3 posOrigin = transform.position + characterController.center;
             RaycastHit hit;
-            if (Physics.SphereCast(posOrigin, 0.5f, transform.forward,  out hit, 0.5f, hostageLayers))
+            if (Physics.SphereCast(posOrigin, 0.5f, transform.forward,  out hit, 0.5f, pickLayers))
             {
-                hit.transform.SendMessage("PlayerSaveMe", SendMessageOptions.DontRequireReceiver);
+                hit.transform.SendMessage("OnPickItem", SendMessageOptions.DontRequireReceiver);
             }
 
-            if (Physics.SphereCast(posOrigin, 0.5f, transform.forward, out hit, 0.5f, doorLayers))
-            {
-                hit.transform.SendMessage("OnFinish", SendMessageOptions.DontRequireReceiver);
-            }
         }
 
         public void TakeDamage(float damage)

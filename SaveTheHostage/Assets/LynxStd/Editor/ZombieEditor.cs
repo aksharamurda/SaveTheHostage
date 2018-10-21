@@ -14,12 +14,13 @@ namespace NaStd
         {
             zombie = (Zombie)target;
             Handles.color = Color.white;
-            Handles.DrawWireArc(zombie.transform.position, Vector3.up, Vector3.forward, 360, zombie.m_ViewRadius);
+
+            Handles.DrawWireArc(zombie.m_ViewMeshFilter.transform.position, Vector3.up, Vector3.forward, 360, zombie.m_ViewRadius);
             Vector3 viewAngleA = zombie.DirFromAngle(-zombie.m_ViewAngle / 2, false);
             Vector3 viewAngleB = zombie.DirFromAngle(zombie.m_ViewAngle / 2, false);
 
-            Handles.DrawLine(zombie.transform.position, zombie.transform.position + viewAngleA * zombie.m_ViewRadius);
-            Handles.DrawLine(zombie.transform.position, zombie.transform.position + viewAngleB * zombie.m_ViewRadius);
+            Handles.DrawLine(zombie.m_ViewMeshFilter.transform.position, zombie.m_ViewMeshFilter.transform.position + viewAngleA * zombie.m_ViewRadius);
+            Handles.DrawLine(zombie.m_ViewMeshFilter.transform.position, zombie.m_ViewMeshFilter.transform.position + viewAngleB * zombie.m_ViewRadius);
 
             Handles.color = Color.red;
             foreach (Transform visibleTarget in zombie.m_VisibleTargets)

@@ -72,6 +72,7 @@ namespace NaStd
                 viewMesh = new Mesh();
                 viewMesh.name = "FOV";
                 m_ViewMeshFilter.mesh = viewMesh;
+                
 
                 StartCoroutine("FindTargetWithDelay", m_PathFindTime);
             }
@@ -252,16 +253,18 @@ namespace NaStd
         {
             m_VisibleTargets.Clear();
             m_CanSeePlayer = false;
-            Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, m_ViewRadius, m_TargetMask);
+            Collider[] targetInViewRadius = Physics.OverlapSphere(m_ViewMeshFilter.transform.position, m_ViewRadius, m_TargetMask);
             for (int i = 0; i < targetInViewRadius.Length; i++)
             {
                 Transform target = targetInViewRadius[i].transform;
-                Vector3 dirToTarget = (target.position - transform.position).normalized;
+                Vector3 dirToTarget = (target.position - m_ViewMeshFilter.transform.position).normalized;
 
-                if (Vector3.Angle(transform.forward, dirToTarget) < m_ViewAngle / 2)
+                if (Vector3.Angle(m_ViewMeshFilter.transform.forward, dirToTarget) < m_ViewAngle / 2)
                 {
-                    float distToTarget = Vector3.Distance(transform.position, target.position);
-                    if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, m_ObstacleMask))
+                    float distToTarget = Vector3.Distance(m_ViewMeshFilter.transform.position, target.position);
+                    //Debug.DrawRay(m_ViewMeshFilter.transform.position, dirToTarget, Color.green);
+
+                    if (!Physics.Raycast(m_ViewMeshFilter.transform.position, dirToTarget, distToTarget, m_ObstacleMask))
                     {
                         m_VisibleTargets.Add(target);
                         m_CanSeePlayer = true;
@@ -280,7 +283,7 @@ namespace NaStd
 
             for (int i = 0; i <= stepCount; i++)
             {
-                float angle = transform.eulerAngles.y - m_ViewAngle / 2 + stepAngleSize * i;
+                float angle = m_ViewMeshFilter.transform.eulerAngles.y - m_ViewAngle / 2 + stepAngleSize * i;
                 //Debug.DrawLine(transform.position, transform.position + DirFromAngle(angle, true) * m_ViewRadius, Color.red);
                 ViewCastInfo newViewCastInfo = ViewCast(angle);
 
@@ -313,8 +316,8 @@ namespace NaStd
             verticles[0] = Vector3.zero;
             for (int i = 0; i < vertexCount - 1; i++)
             {
-                verticles[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
-
+                verticles[i + 1] = m_ViewMeshFilter.transform.InverseTransformPoint(viewPoints[i]);
+                
                 if (i < vertexCount - 2)
                 {
                     triangles[i * 3] = 0;
@@ -362,15 +365,15 @@ namespace NaStd
         ViewCastInfo ViewCast(float globalAngle)
         {
             Vector3 dir = DirFromAngle(globalAngle, true);
-
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, dir, out hit, m_ViewRadius, m_ObstacleMask))
+            //Debug.DrawRay(m_ViewMeshFilter.transform.position, dir, Color.red);
+            if (Physics.Raycast(m_ViewMeshFilter.transform.position, dir, out hit, m_ViewRadius, m_ObstacleMask))
             {
                 return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
             }
             else
             {
-                return new ViewCastInfo(false, transform.position + dir * m_ViewRadius, m_ViewRadius, globalAngle);
+                return new ViewCastInfo(false, m_ViewMeshFilter.transform.position + dir * m_ViewRadius, m_ViewRadius, globalAngle);
             }
         }
 
@@ -380,7 +383,7 @@ namespace NaStd
         {
             if (!angleIsGlobal)
             {
-                angleInDegrees += transform.eulerAngles.y;
+                angleInDegrees += m_ViewMeshFilter.transform.eulerAngles.y;
             }
 
             return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));

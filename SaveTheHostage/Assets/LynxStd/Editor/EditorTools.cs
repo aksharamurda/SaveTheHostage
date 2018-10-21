@@ -15,7 +15,7 @@ namespace NaStd
             if (layers == null)
             {
                 layers = new List<string>();
-                layerNames = new string[4];
+                layerNames = new string[32];
             }
             else
             {
