@@ -9,9 +9,10 @@ namespace NaStd
         public float healthAmount = 100;
         public bool isDead;
         public LayerMask pickLayers;
-        public LayerMask doorLayers;
+        public LayerMask finishLayers;
         private CharacterController characterController;
         private PathFollower pathFollower;
+        public PathFollower GetPathFollower { get { return pathFollower; } }
         void Start()
         {
             characterController = GetComponent<CharacterController>();
@@ -27,11 +28,18 @@ namespace NaStd
                 hit.transform.SendMessage("OnPickItem", SendMessageOptions.DontRequireReceiver);
             }
 
+            if (Physics.SphereCast(posOrigin, 0.5f, transform.forward, out hit, 0.5f, finishLayers))
+            {
+                hit.transform.SendMessage("OnFinishZone", SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         public void TakeDamage(float damage)
         {
             if (isDead)
+                return;
+
+            if (GameManager.instance.isDone)
                 return;
 
             if (healthAmount > 0)
@@ -42,9 +50,8 @@ namespace NaStd
             else
             {
                 isDead = true;
-                PathInputManager.instance.enabled = false;
                 pathFollower.m_Animator.SetTrigger("isDead");
-                pathFollower.isDead();
+                pathFollower.DisableController();
             }
 
 

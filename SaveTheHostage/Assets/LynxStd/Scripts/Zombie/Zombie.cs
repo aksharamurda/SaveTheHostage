@@ -60,7 +60,6 @@ namespace NaStd
 
         private NavMeshAgent navAgent;
 
-
         void Start()
         {
             m_Animator = GetComponent<Animator>();
@@ -194,6 +193,13 @@ namespace NaStd
             }
         }
 
+        public void FreezeZombie()
+        {
+            m_CanSeePlayer = false;
+            navAgent.isStopped = true;
+            m_Animator.SetBool("isMove", false);
+        }
+
         IEnumerator FindTargetWithDelay(float delay)
         {
             while (true)
@@ -268,6 +274,7 @@ namespace NaStd
                     {
                         m_VisibleTargets.Add(target);
                         m_CanSeePlayer = true;
+                        m_ViewMeshFilter.gameObject.SetActive(false);
                     }
                 }
             }

@@ -20,9 +20,8 @@ namespace NaStd
         private LineRenderer pathLine;
         [HideInInspector]
         public Animator m_Animator;
-        [HideInInspector]
-        public Path path;
-
+        private Path path;
+        
         private bool pathLineEnabled
         {
             get
@@ -54,7 +53,7 @@ namespace NaStd
         }
 
 
-        public void isDead()
+        public void DisableController()
         {
             currentNode = 0;
             pathLineEnabled = false;
@@ -64,6 +63,7 @@ namespace NaStd
             SendMessage("PathComplete", SendMessageOptions.DontRequireReceiver);
             currentPath.Clear();
             path.SetHasDestination();
+            PathInputManager.instance.enabled = false;
         }
 
         void Update()
