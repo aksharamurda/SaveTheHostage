@@ -18,8 +18,20 @@ namespace NaStd
         private List<Image> bananaImage = new List<Image>();
         private int currentBanana = -1;
 
+        [Header("Items Shield")]
+        public Image shieldSprite;
+
+
+        [Header("UI Game Over")]
+        public GameObject parentUIGameOver;
+
         [HideInInspector]
         public bool isDone;
+        [HideInInspector]
+        public bool isShieldActive;
+
+        private float timeShield;
+        private float timeStamp;
 
         void Awake()
         {
@@ -29,6 +41,20 @@ namespace NaStd
         void Start()
         {
             CreateUIItems();
+        }
+
+        void Update()
+        {
+            if (isShieldActive)
+            {
+                timeStamp -= Time.deltaTime;
+                shieldSprite.fillAmount = timeStamp / timeShield;
+
+                if (timeStamp <= 0) {
+                    timeStamp = 0;
+                    isShieldActive = false;
+                }
+            }
         }
 
         public void CreateUIItems()
@@ -46,12 +72,24 @@ namespace NaStd
 
         }
 
-        public void SetPickItem()
+        public void SetPickItem(ItemType itemType, float time = 0)
         {
-            currentBanana++;
-            bananaImage[currentBanana].sprite = bananaSprite;
-            bananaImage[currentBanana].color = Color.white;
+            
+            switch (itemType)
+            {
+                case ItemType.Item:
+                    currentBanana++;
+                    bananaImage[currentBanana].sprite = bananaSprite;
+                    bananaImage[currentBanana].color = Color.white;
+                    break;
 
+                case ItemType.Shield:
+                    shieldSprite.fillAmount = 1;
+                    isShieldActive = true;
+                    timeShield = time;
+                    timeStamp = time;
+                    break;
+            }
         }
 
         public void OnFinishGame()
@@ -61,6 +99,11 @@ namespace NaStd
                 Debug.Log("Show UI Game Score!");
                 isDone = true;
             }
+        }
+
+        public void OnGameOver()
+        {
+            parentUIGameOver.SetActive(true);
         }
 
         public void OnPauseGame()

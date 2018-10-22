@@ -141,7 +141,7 @@ namespace NaStd
             {
                 float dist = Vector3.Distance(transform.position, m_VisibleTargets[0].position);
                 //Debug.Log(dist);
-                if (dist < 1f)
+                if (dist < 1.2f)
                 {
                     m_Animator.SetTrigger("isAttack");
                     m_Animator.SetBool("isMove", false);
