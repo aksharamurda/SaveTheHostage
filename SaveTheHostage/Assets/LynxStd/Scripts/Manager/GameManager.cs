@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace NaStd
 {
@@ -40,7 +41,9 @@ namespace NaStd
 
         void Start()
         {
+            parentUIGameOver.SetActive(false);
             CreateUIItems();
+
         }
 
         void Update()
@@ -103,12 +106,23 @@ namespace NaStd
 
         public void OnGameOver()
         {
+            StartCoroutine(WaitShowGameOver());
+        }
+
+        IEnumerator WaitShowGameOver()
+        {
+            yield return new WaitForSeconds(1);
             parentUIGameOver.SetActive(true);
         }
 
-        public void OnPauseGame()
+        public void OnButtonPause()
         {
             Time.timeScale = Time.timeScale == 1 ? 0 : 1;
+        }
+
+        public void OnButtonRetry()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
