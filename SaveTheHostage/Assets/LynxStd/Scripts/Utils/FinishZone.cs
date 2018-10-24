@@ -12,12 +12,12 @@ namespace NaStd {
 
         IEnumerator WaitForEndGame()
         {
-            yield return new WaitForSeconds(0.25f);
-
             foreach (Zombie zombie in FindObjectsOfType(typeof(Zombie)))
             {
                 zombie.FreezeZombie();
             }
+
+            yield return new WaitForSeconds(0.25f);
 
             Player player = FindObjectOfType(typeof(Player)) as Player;
             player.GetPathFollower.DisableController();

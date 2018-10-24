@@ -141,7 +141,7 @@ namespace NaStd
             {
                 float dist = Vector3.Distance(transform.position, m_VisibleTargets[0].position);
                 //Debug.Log(dist);
-                if (dist < 1.2f)
+                if (dist < 1.3f)
                 {
                     m_Animator.SetTrigger("isAttack");
                     m_Animator.SetBool("isMove", false);
@@ -156,6 +156,9 @@ namespace NaStd
 
         public void OnAttack()
         {
+            if (navAgent.isStopped)
+                return;
+
             m_VisibleTargets[0].SendMessage("TakeDamage", damageZombie , SendMessageOptions.DontRequireReceiver);
         }
 

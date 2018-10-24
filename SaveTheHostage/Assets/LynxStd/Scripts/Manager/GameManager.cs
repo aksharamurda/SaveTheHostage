@@ -10,21 +10,25 @@ namespace NaStd
     {
         public static GameManager instance;
 
-        [Header("Items Manager")]
-        public Transform parentUIItem;
-        public GameObject prefabItem;
-        [Header("Items Banana")]
-        public int bananaSize = 1;
-        public Sprite bananaSprite;
-        private List<Image> bananaImage = new List<Image>();
-        private int currentBanana = -1;
+        private Transform parentUIItem;
+        
+        [Header("Level Data")]
+        public DataLevel level;
+        private List<Image> itemImages = new List<Image>();
+        private int currentItem = -1;
 
-        [Header("Items Shield")]
-        public Image shieldSprite;
+        private Image shieldSprite;
 
+        private GameObject parentUIGameOver;
+        private GameObject parentUIGameScore;
+        private GameObject levelUIName;
+        private GameObject totalCoin;
 
-        [Header("UI Game Over")]
-        public GameObject parentUIGameOver;
+        private Animator starAnimator;
+
+        public Image starA;
+        public Image starB;
+        public Image starC;
 
         [HideInInspector]
         public bool isDone;
@@ -37,11 +41,26 @@ namespace NaStd
         void Awake()
         {
             instance = this;
+
+            totalCoin = GameObject.Find("TotalCoin");
+            levelUIName = GameObject.Find("LevelNameUI");
+            starAnimator = GameObject.Find("StarUI").GetComponent<Animator>();
+            parentUIItem = GameObject.Find("PanelItemsUI").transform;
+
+            GameObject shieldUI = GameObject.Find("ShieldUI");
+            shieldSprite = shieldUI.GetComponentInChildren<Image>();
+            shieldUI.SetActive(level.haveShield);
+
+            levelUIName.GetComponent<Text>().text = level.levelName;
+
+            parentUIGameOver = GameObject.Find("PanelEndGameUI");
+            parentUIGameScore = GameObject.Find("PanelSuccessGameUI");
         }
 
         void Start()
         {
             parentUIGameOver.SetActive(false);
+            parentUIGameScore.SetActive(false);
             CreateUIItems();
 
         }
@@ -62,15 +81,15 @@ namespace NaStd
 
         public void CreateUIItems()
         {
-            if (bananaSize <= 0)
+            if (level.itemSize <= 0)
                 return;
 
-            for (int x=0; x < bananaSize; x++)
+            for (int x=0; x < level.itemSize; x++)
             {
-                GameObject itm = Instantiate(prefabItem, transform.position, Quaternion.identity);
+                GameObject itm = Instantiate(level.prefabItem, transform.position, Quaternion.identity);
                 itm.transform.SetParent(parentUIItem);
                 itm.transform.localScale = Vector3.one;
-                bananaImage.Add(itm.GetComponent<Image>());
+                itemImages.Add(itm.GetComponent<Image>());
             }
 
         }
@@ -81,9 +100,9 @@ namespace NaStd
             switch (itemType)
             {
                 case ItemType.Item:
-                    currentBanana++;
-                    bananaImage[currentBanana].sprite = bananaSprite;
-                    bananaImage[currentBanana].color = Color.white;
+                    currentItem++;
+                    itemImages[currentItem].sprite = level.itemSprite;
+                    itemImages[currentItem].color = Color.white;
                     break;
 
                 case ItemType.Shield:
@@ -100,8 +119,17 @@ namespace NaStd
             if (!isDone)
             {
                 Debug.Log("Show UI Game Score!");
+                parentUIGameScore.SetActive(true);
+                
+                StartCoroutine(WaitShowGameScore());
                 isDone = true;
             }
+        }
+
+        IEnumerator WaitShowGameScore()
+        {
+            yield return new WaitForSeconds(0.25f);
+            starAnimator.SetTrigger("3Star");
         }
 
         public void OnGameOver()
@@ -111,7 +139,7 @@ namespace NaStd
 
         IEnumerator WaitShowGameOver()
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             parentUIGameOver.SetActive(true);
         }
 
@@ -124,5 +152,11 @@ namespace NaStd
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+
+        public void OnButtonNextLevel(string levelname)
+        {
+            SceneManager.LoadScene(levelname);
+        }
+
     }
 }
