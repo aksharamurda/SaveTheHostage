@@ -44,7 +44,7 @@ namespace NaStd
         void Awake()
         {
             instance = this;
-            GlobalStatic.CreatePlayerStats();
+            PlayerSave.CreatePlayerStats();
 
             totalCoin = GameObject.Find("TotalCoinUI");
             levelUIName = GameObject.Find("LevelNameUI");
@@ -60,7 +60,7 @@ namespace NaStd
             parentUIGameOver = GameObject.Find("PanelEndGameUI");
             parentUIGameScore = GameObject.Find("PanelSuccessGameUI");
 
-            playerStats = GlobalStatic.GetPlayerStats();
+            playerStats = PlayerSave.GetPlayerStats();
             totalCoin.GetComponent<Text>().text = playerStats.playerCoin.ToString();
         }
 
@@ -138,7 +138,7 @@ namespace NaStd
 
         IEnumerator WaitShowGameScore()
         {
-            playerStats = GlobalStatic.GetPlayerStats();
+            playerStats = PlayerSave.GetPlayerStats();
 
             yield return new WaitForSeconds(0.25f);
             float persenScore = (float)(itemPickSize) / (float)(level.itemSize);
@@ -166,7 +166,7 @@ namespace NaStd
             }
 
             totalCoin.GetComponent<Text>().text = playerStats.playerCoin.ToString();
-            GlobalStatic.SavePlayerStats(playerStats);
+            PlayerSave.SavePlayerStats(playerStats);
         }
 
         public void OnGameOver()
