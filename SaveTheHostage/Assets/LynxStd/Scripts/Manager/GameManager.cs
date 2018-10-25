@@ -16,6 +16,7 @@ namespace NaStd
         public DataLevel level;
         private List<Image> itemImages = new List<Image>();
         private int currentItem = -1;
+        private int itemPickSize;
 
         private Image shieldSprite;
 
@@ -42,7 +43,7 @@ namespace NaStd
         {
             instance = this;
 
-            totalCoin = GameObject.Find("TotalCoin");
+            totalCoin = GameObject.Find("TotalCoinUI");
             levelUIName = GameObject.Find("LevelNameUI");
             starAnimator = GameObject.Find("StarUI").GetComponent<Animator>();
             parentUIItem = GameObject.Find("PanelItemsUI").transform;
@@ -77,6 +78,8 @@ namespace NaStd
                     isShieldActive = false;
                 }
             }
+
+            totalCoin.GetComponent<Text>().text = GlobalStatic.GetPlayerStats.playerCoin.ToString();
         }
 
         public void CreateUIItems()
@@ -103,6 +106,7 @@ namespace NaStd
                     currentItem++;
                     itemImages[currentItem].sprite = level.itemSprite;
                     itemImages[currentItem].color = Color.white;
+                    itemPickSize++;
                     break;
 
                 case ItemType.Shield:
@@ -129,7 +133,29 @@ namespace NaStd
         IEnumerator WaitShowGameScore()
         {
             yield return new WaitForSeconds(0.25f);
-            starAnimator.SetTrigger("3Star");
+            float persenScore = (float)(itemPickSize) / (float)(level.itemSize);
+            float starPersen = persenScore * 100f;
+
+            Debug.Log(itemPickSize + " | " + level.itemSize + " | " + starPersen);
+
+            if (starPersen <= 33.4f)
+            {
+                starAnimator.SetTrigger("1Star");
+                GlobalStatic.GetPlayerStats.playerCoin += 10;
+                GlobalStatic.GetPlayerStats.playerStar += 1;
+            }
+            else if (starPersen > 33.4f && starPersen <= 66.7f)
+            {
+                starAnimator.SetTrigger("2Star");
+                GlobalStatic.GetPlayerStats.playerCoin += 35;
+                GlobalStatic.GetPlayerStats.playerStar += 2;
+            }
+            else if (starPersen > 66.7f)
+            {
+                starAnimator.SetTrigger("3Star");
+                GlobalStatic.GetPlayerStats.playerCoin += 85;
+                GlobalStatic.GetPlayerStats.playerStar += 3;
+            }
         }
 
         public void OnGameOver()

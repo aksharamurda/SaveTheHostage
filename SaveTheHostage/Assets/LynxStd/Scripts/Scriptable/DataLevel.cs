@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "Level", menuName = "Level", order = 1)]
+[CreateAssetMenu(fileName = "Level", menuName = "Scriptable/Level", order = 1)]
 public class DataLevel : ScriptableObject {
     public string levelName;
     public GameObject prefabItem;
