@@ -195,5 +195,9 @@ namespace NaStd
             SceneManager.LoadScene(levelname);
         }
 
+        public void OnButtonBackToMenu(string levelname)
+        {
+            SceneManager.LoadScene(levelname);
+        }
     }
 }
