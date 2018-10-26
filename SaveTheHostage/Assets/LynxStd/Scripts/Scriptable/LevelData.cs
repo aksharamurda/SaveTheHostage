@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptable/Level", order = 1)]
-public class DataLevel : ScriptableObject {
+public class LevelData : ScriptableObject {
     public string levelName;
     public GameObject prefabItem;
     public int itemSize;

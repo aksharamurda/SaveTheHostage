@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerStats {
+public class PlayerProfile {
 
     public string playerName = "[Player Name]";
     public int playerCoin = 100;
     public int playerStar;
     public int playerLevel;
 
-    public PlayerStats()
+    public PlayerProfile()
     {
         playerName = "[Player Name]";
         playerCoin = 100;

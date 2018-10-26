@@ -13,7 +13,7 @@ namespace NaStd
         private Transform parentUIItem;
         
         [Header("Level Data")]
-        public DataLevel level;
+        public LevelData level;
         private List<Image> itemImages = new List<Image>();
         private int currentItem = -1;
         private int itemPickSize;
@@ -39,12 +39,12 @@ namespace NaStd
         private float timeShield;
         private float timeStamp;
 
-        private PlayerStats playerStats;
+        private PlayerProfile playerProfile;
 
         void Awake()
         {
             instance = this;
-            PlayerSave.CreatePlayerStats();
+            PlayerSave.CreatePlayerProfile();
 
             totalCoin = GameObject.Find("TotalCoinUI");
             levelUIName = GameObject.Find("LevelNameUI");
@@ -60,8 +60,8 @@ namespace NaStd
             parentUIGameOver = GameObject.Find("PanelEndGameUI");
             parentUIGameScore = GameObject.Find("PanelSuccessGameUI");
 
-            playerStats = PlayerSave.GetPlayerStats();
-            totalCoin.GetComponent<Text>().text = playerStats.playerCoin.ToString();
+            playerProfile = PlayerSave.GetPlayerProfile();
+            totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
         }
 
         void Start()
@@ -138,7 +138,7 @@ namespace NaStd
 
         IEnumerator WaitShowGameScore()
         {
-            playerStats = PlayerSave.GetPlayerStats();
+            playerProfile = PlayerSave.GetPlayerProfile();
 
             yield return new WaitForSeconds(0.25f);
             float persenScore = (float)(itemPickSize) / (float)(level.itemSize);
@@ -149,24 +149,24 @@ namespace NaStd
             if (starPersen <= 33.4f)
             {
                 starAnimator.SetTrigger("1Star");
-                playerStats.playerCoin += 10;
-                playerStats.playerStar += 1;
+                playerProfile.playerCoin += 10;
+                playerProfile.playerStar += 1;
             }
             else if (starPersen > 33.4f && starPersen <= 66.7f)
             {
                 starAnimator.SetTrigger("2Star");
-                playerStats.playerCoin += 35;
-                playerStats.playerStar += 2;
+                playerProfile.playerCoin += 35;
+                playerProfile.playerStar += 2;
             }
             else if (starPersen > 66.7f)
             {
                 starAnimator.SetTrigger("3Star");
-                playerStats.playerCoin += 85;
-                playerStats.playerStar += 3;
+                playerProfile.playerCoin += 85;
+                playerProfile.playerStar += 3;
             }
 
-            totalCoin.GetComponent<Text>().text = playerStats.playerCoin.ToString();
-            PlayerSave.SavePlayerStats(playerStats);
+            totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+            PlayerSave.UpdatePlayerProfile(playerProfile);
         }
 
         public void OnGameOver()
