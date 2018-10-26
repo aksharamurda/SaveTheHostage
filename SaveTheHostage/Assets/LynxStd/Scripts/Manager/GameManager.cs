@@ -14,6 +14,7 @@ namespace NaStd
         
         [Header("Level Data")]
         public LevelData level;
+        private Zone zone;
         private List<Image> itemImages = new List<Image>();
         private int currentItem = -1;
         private int itemPickSize;
@@ -39,12 +40,11 @@ namespace NaStd
         private float timeShield;
         private float timeStamp;
 
-        private PlayerProfile playerProfile;
 
         void Awake()
         {
             instance = this;
-            PlayerSave.CreatePlayerProfile();
+            //PlayerSave.CreatePlayerProfile();
 
             totalCoin = GameObject.Find("TotalCoinUI");
             levelUIName = GameObject.Find("LevelNameUI");
@@ -55,13 +55,23 @@ namespace NaStd
             shieldSprite = shieldUI.GetComponentInChildren<Image>();
             shieldUI.SetActive(level.haveShield);
 
-            levelUIName.GetComponent<Text>().text = level.levelName;
+            //levelUIName.GetComponent<Text>().text = level.levelName;
 
             parentUIGameOver = GameObject.Find("PanelEndGameUI");
             parentUIGameScore = GameObject.Find("PanelSuccessGameUI");
 
-            playerProfile = PlayerSave.GetPlayerProfile();
-            totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+            //playerProfile = PlayerSave.GetPlayerProfile();
+            //totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+            if (ZoneData.GetZoneData(level.zone) != null)
+                zone = (ZoneData.GetZoneData(level.zone));
+
+            foreach (Level lvl in zone.levels)
+            {
+                if (lvl.levelName == level.refLevelScene)
+                {
+                    level.level = lvl;
+                }
+            }
         }
 
         void Start()
@@ -138,35 +148,47 @@ namespace NaStd
 
         IEnumerator WaitShowGameScore()
         {
-            playerProfile = PlayerSave.GetPlayerProfile();
-
             yield return new WaitForSeconds(0.25f);
-            float persenScore = (float)(itemPickSize) / (float)(level.itemSize);
-            float starPersen = persenScore * 100f;
+            //float persenScore = (float)(itemPickSize) / (float)(level.itemSize);
+            //float starPersen = persenScore * 100f;
 
-            Debug.Log(itemPickSize + " | " + level.itemSize + " | " + starPersen);
+            //Debug.Log(itemPickSize + " | " + level.itemSize + " | " + starPersen);
 
-            if (starPersen <= 33.4f)
+            switch (itemPickSize)
             {
-                starAnimator.SetTrigger("1Star");
-                playerProfile.playerCoin += 10;
-                playerProfile.playerStar += 1;
-            }
-            else if (starPersen > 33.4f && starPersen <= 66.7f)
-            {
-                starAnimator.SetTrigger("2Star");
-                playerProfile.playerCoin += 35;
-                playerProfile.playerStar += 2;
-            }
-            else if (starPersen > 66.7f)
-            {
-                starAnimator.SetTrigger("3Star");
-                playerProfile.playerCoin += 85;
-                playerProfile.playerStar += 3;
+                case 1:
+                    starAnimator.SetTrigger("1Star");
+                    level.level.findItem = 1;
+                    break;
+                case 2:
+                    starAnimator.SetTrigger("2Star");
+                    level.level.findItem = 2;
+                    break;
+                case 3:
+                    starAnimator.SetTrigger("3Star");
+                    level.level.findItem = 3;
+                    break;
             }
 
-            totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
-            PlayerSave.UpdatePlayerProfile(playerProfile);
+            for(int x=0; x < zone.levels.Count; x++)
+            {
+                if (zone.levels[x].levelName == level.refLevelScene)
+                {
+                    zone.levels[x] = level.level;
+                    if(zone.levels[x].findItem > 2)
+                    {
+                        if((x + 1) < zone.levels.Count)
+                        {
+                            zone.levels[x + 1].Unlocked = true;
+                        }
+                    }
+                }
+            }
+
+
+            ZoneData.UpdateZoneData(zone);
+            //totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+
         }
 
         public void OnGameOver()

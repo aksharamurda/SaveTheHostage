@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIPanelZone : MonoBehaviour {
 
     public ZoneSettings zoneSettings;
+    public Text textItem;
+
     [HideInInspector]
     public Zone zone;
     
@@ -17,11 +20,19 @@ public class UIPanelZone : MonoBehaviour {
             zone = (ZoneData.GetZoneData(zoneSettings.zone.zoneName));
     }
 
+    void Start()
+    {
+        float totalItem = 0;
+        foreach (Level lvl in zone.levels)
+        {
+            totalItem += lvl.findItem;
+        }
+        textItem.text = totalItem + "/30";
+
+    }
+
     public void OnButtonEnterZone()
     {
-        ZoneData.UpdateZoneData(zone);
-
-        if (ZoneData.GetZoneData(zone.zoneName) != null)
-        zone = ZoneData.GetZoneData(zone.zoneName);
+        UIMainMenu.instance.SwitchZoneLevel(zone.levels);
     }
 }

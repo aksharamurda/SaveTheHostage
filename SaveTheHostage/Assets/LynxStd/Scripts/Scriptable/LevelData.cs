@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptable/Level", order = 1)]
 public class LevelData : ScriptableObject {
-    public string levelName;
+    public string zone;
+    public string refLevelScene;
+
+    public Level level;
     public GameObject prefabItem;
     public int itemSize;
     public Sprite itemSprite;
