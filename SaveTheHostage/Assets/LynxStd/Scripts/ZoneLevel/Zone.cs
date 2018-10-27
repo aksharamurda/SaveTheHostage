@@ -7,6 +7,7 @@ using System;
 public class Zone{
     public string zoneName;
     public bool Unlocked;
-    //[HideInInspector]
+    public bool MissionComplete;
+    [HideInInspector]
     public List<Level> levels = new List<Level>();
 }

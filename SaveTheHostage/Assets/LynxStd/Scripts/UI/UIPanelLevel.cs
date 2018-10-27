@@ -8,6 +8,7 @@ public class UIPanelLevel : MonoBehaviour {
 
     public Level level;
     public Text levelText;
+    public List<Image> stars = new List<Image>();
 
     void Start()
     {
@@ -15,6 +16,18 @@ public class UIPanelLevel : MonoBehaviour {
         {
             GetComponent<Image>().color = Color.red;
         }
+
+        if(stars.Count > 0)
+        {
+            for (int x=0; x < level.findItem; x++)
+            {
+                stars[x].enabled = true;
+            }
+        }
+
+        string lvlName = level.levelName;
+        if(lvlName != "")
+            levelText.text = lvlName.Substring(5);
     }
 
     public void OnButtonLoadLevel()

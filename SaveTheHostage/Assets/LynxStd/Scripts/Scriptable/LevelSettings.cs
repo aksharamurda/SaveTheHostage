@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptable/Level", order = 1)]
-public class LevelData : ScriptableObject {
+public class LevelSettings : ScriptableObject {
     public string zone;
     public string refLevelScene;
 

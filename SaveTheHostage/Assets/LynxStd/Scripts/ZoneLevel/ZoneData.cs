@@ -18,15 +18,6 @@ public class ZoneData
             BinaryFormatter binFormat = new BinaryFormatter();
             FileStream fileStream = new FileStream(Application.persistentDataPath + "/" + zone.zoneName + ".bin", FileMode.Create);
 
-            /*
-            for (int x = 0; x < 5; x++)
-            {
-                zone.levels.Add(new Level(zone.zoneName + "Level" + (x + 1)));
-            }
-
-            zone.levels[0].Unlocked = true;
-            */
-
             using (CryptoStream cryptoStream = Encryption.CreateEncryptionStream(key, fileStream))
             {
                 binFormat.Serialize(cryptoStream, zone);

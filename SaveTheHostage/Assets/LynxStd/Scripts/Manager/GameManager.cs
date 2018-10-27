@@ -13,7 +13,7 @@ namespace NaStd
         private Transform parentUIItem;
         
         [Header("Level Data")]
-        public LevelData level;
+        public LevelSettings levelSettings;
         private Zone zone;
         private List<Image> itemImages = new List<Image>();
         private int currentItem = -1;
@@ -53,7 +53,7 @@ namespace NaStd
 
             GameObject shieldUI = GameObject.Find("ShieldUI");
             shieldSprite = shieldUI.GetComponentInChildren<Image>();
-            shieldUI.SetActive(level.haveShield);
+            shieldUI.SetActive(levelSettings.haveShield);
 
             //levelUIName.GetComponent<Text>().text = level.levelName;
 
@@ -62,14 +62,14 @@ namespace NaStd
 
             //playerProfile = PlayerSave.GetPlayerProfile();
             //totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
-            if (ZoneData.GetZoneData(level.zone) != null)
-                zone = (ZoneData.GetZoneData(level.zone));
+            if (ZoneData.GetZoneData(levelSettings.zone) != null)
+                zone = (ZoneData.GetZoneData(levelSettings.zone));
 
             foreach (Level lvl in zone.levels)
             {
-                if (lvl.levelName == level.refLevelScene)
+                if (lvl.levelName == levelSettings.refLevelScene)
                 {
-                    level.level = lvl;
+                    levelSettings.level = lvl;
                 }
             }
         }
@@ -100,12 +100,12 @@ namespace NaStd
 
         public void CreateUIItems()
         {
-            if (level.itemSize <= 0)
+            if (levelSettings.itemSize <= 0)
                 return;
 
-            for (int x=0; x < level.itemSize; x++)
+            for (int x=0; x < levelSettings.itemSize; x++)
             {
-                GameObject itm = Instantiate(level.prefabItem, transform.position, Quaternion.identity);
+                GameObject itm = Instantiate(levelSettings.prefabItem, transform.position, Quaternion.identity);
                 itm.transform.SetParent(parentUIItem);
                 itm.transform.localScale = Vector3.one;
                 itemImages.Add(itm.GetComponent<Image>());
@@ -120,7 +120,7 @@ namespace NaStd
             {
                 case ItemType.Item:
                     currentItem++;
-                    itemImages[currentItem].sprite = level.itemSprite;
+                    itemImages[currentItem].sprite = levelSettings.itemSprite;
                     itemImages[currentItem].color = Color.white;
                     itemPickSize++;
                     break;
@@ -158,30 +158,39 @@ namespace NaStd
             {
                 case 1:
                     starAnimator.SetTrigger("1Star");
-                    level.level.findItem = 1;
+                    if(!levelSettings.level.levelComplete && (itemPickSize > levelSettings.level.findItem))
+                        levelSettings.level.findItem = 1;
+
                     break;
                 case 2:
                     starAnimator.SetTrigger("2Star");
-                    level.level.findItem = 2;
+                    if (!levelSettings.level.levelComplete && (itemPickSize > levelSettings.level.findItem))
+                        levelSettings.level.findItem = 2;
                     break;
                 case 3:
                     starAnimator.SetTrigger("3Star");
-                    level.level.findItem = 3;
+                    levelSettings.level.findItem = 3;
+                    levelSettings.level.levelComplete = true;
                     break;
             }
 
             for(int x=0; x < zone.levels.Count; x++)
             {
-                if (zone.levels[x].levelName == level.refLevelScene)
+                if (zone.levels[x].levelName == levelSettings.refLevelScene)
                 {
-                    zone.levels[x] = level.level;
-                    if(zone.levels[x].findItem > 2)
+                    zone.levels[x] = levelSettings.level;
+                    if((x + 1) < zone.levels.Count)
                     {
-                        if((x + 1) < zone.levels.Count)
-                        {
-                            zone.levels[x + 1].Unlocked = true;
-                        }
+                        zone.levels[x + 1].Unlocked = true;
                     }
+                }
+
+                int sumFindItem = 0;
+                sumFindItem += zone.levels[x].findItem;
+
+                if (sumFindItem > 2)
+                {
+                    zone.MissionComplete = true;
                 }
             }
 

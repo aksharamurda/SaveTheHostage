@@ -17,9 +17,8 @@ public class Encryption
 
         RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
         // Using a cryptographic random number generator
-        rng.GetNonZeroBytes(iv);
-
-
+        //rng.GetNonZeroBytes(iv);
+        rng.GetBytes(iv);
         // Write IV to the start of the stream
         outputStream.Write(iv, 0, iv.Length);
 
