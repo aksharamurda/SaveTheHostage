@@ -8,7 +8,7 @@ public class UIPanelZone : MonoBehaviour {
     public ZoneSettings zoneSettings;
     public Text textItem;
 
-    //[HideInInspector]
+    [HideInInspector]
     public Zone zone;
     
 
@@ -18,6 +18,10 @@ public class UIPanelZone : MonoBehaviour {
         if (ZoneData.GetZoneData(zoneSettings.zone.zoneName) != null)
             zone = (ZoneData.GetZoneData(zoneSettings.zone.zoneName));
 
+    }
+
+    private void Start()
+    {
         Init();
     }
 
@@ -33,7 +37,7 @@ public class UIPanelZone : MonoBehaviour {
             totalItem += lvl.findItem;
         }
 
-        textItem.text = totalItem + "/30";
+        textItem.text = totalItem + "/" + zone.itemGoal;
 
         string idZone = zone.zoneName;
         idZone = idZone.Substring(4);
@@ -46,13 +50,11 @@ public class UIPanelZone : MonoBehaviour {
             string prevZoneName = "Zone" + (id - 1);
             
             Zone prevZone = new Zone();
-
-            
             if (ZoneData.GetZoneData(prevZoneName) != null)
                 prevZone = (ZoneData.GetZoneData(prevZoneName));
 
-            if (prevZone.MissionComplete)
-                zone.Unlocked = true;
+            if (prevZone.missionComplete)
+                zone.unlockedZone = true;
 
             ZoneData.UpdateZoneData(zone);
             zone = (ZoneData.GetZoneData(zoneSettings.zone.zoneName));
@@ -60,7 +62,7 @@ public class UIPanelZone : MonoBehaviour {
 
         
 
-        if (!zone.Unlocked)
+        if (!zone.unlockedZone)
             GetComponent<Image>().color = Color.red;
 
 
@@ -68,7 +70,7 @@ public class UIPanelZone : MonoBehaviour {
 
     public void OnButtonEnterZone()
     {
-        if (!zone.Unlocked)
+        if (!zone.unlockedZone)
             return;
 
         UIMainMenu.instance.SwitchZoneLevel(zone.levels);

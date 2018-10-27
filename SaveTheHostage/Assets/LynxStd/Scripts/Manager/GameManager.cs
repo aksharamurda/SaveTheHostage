@@ -179,21 +179,22 @@ namespace NaStd
                 if (zone.levels[x].levelName == levelSettings.refLevelScene)
                 {
                     zone.levels[x] = levelSettings.level;
-                    if((x + 1) < zone.levels.Count)
-                    {
-                        zone.levels[x + 1].Unlocked = true;
-                    }
+
+                    if(itemPickSize > 0)
+                        if((x + 1) < zone.levels.Count)
+                        {
+                            zone.levels[x + 1].Unlocked = true;
+                        }
                 }
 
                 int sumFindItem = 0;
                 sumFindItem += zone.levels[x].findItem;
 
-                if (sumFindItem > 2)
+                if (sumFindItem >= zone.itemGoal)
                 {
-                    zone.MissionComplete = true;
+                    zone.missionComplete = true;
                 }
             }
-
 
             ZoneData.UpdateZoneData(zone);
             //totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();

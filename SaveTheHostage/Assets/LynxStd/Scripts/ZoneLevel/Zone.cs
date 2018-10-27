@@ -6,8 +6,9 @@ using System;
 [Serializable]
 public class Zone{
     public string zoneName;
-    public bool Unlocked;
-    public bool MissionComplete;
+    public int itemGoal;
+    public bool unlockedZone;
+    public bool missionComplete;
     [HideInInspector]
     public List<Level> levels = new List<Level>();
 }
