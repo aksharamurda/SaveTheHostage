@@ -9,6 +9,5 @@ public class Zone{
     public int itemGoal;
     public bool unlockedZone;
     public bool missionComplete;
-    [HideInInspector]
     public List<Level> levels = new List<Level>();
 }

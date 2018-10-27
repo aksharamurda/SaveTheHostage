@@ -4,5 +4,6 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Zone", menuName = "Scriptable/Zone Settings", order = 1)]
 public class ZoneSettings : ScriptableObject {
+    public string keyZone;
     public Zone zone;
 }

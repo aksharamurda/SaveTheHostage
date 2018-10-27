@@ -22,14 +22,17 @@ public class UIPanelZone : MonoBehaviour {
 
     private void Start()
     {
+        if (zone == null)
+            return;
+
+        if (zone.zoneName != zoneSettings.keyZone)
+            return;
+
         Init();
     }
 
     void Init()
     {
-
-        if (zone == null)
-            return;
 
         float totalItem = 0;
         foreach (Level lvl in zone.levels)
@@ -62,14 +65,17 @@ public class UIPanelZone : MonoBehaviour {
 
         
 
-        if (!zone.unlockedZone)
-            GetComponent<Image>().color = Color.red;
+        if (zone.unlockedZone)
+            GetComponent<Image>().color = Color.white;
 
 
     }
 
     public void OnButtonEnterZone()
     {
+        if (zone.zoneName != zoneSettings.keyZone)
+            return;
+
         if (!zone.unlockedZone)
             return;
 
