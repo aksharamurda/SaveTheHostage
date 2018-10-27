@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIMainMenu : MonoBehaviour {
@@ -8,22 +9,29 @@ public class UIMainMenu : MonoBehaviour {
     public static UIMainMenu instance;
     private GameObject panelZoneUI;
     private GameObject panelLevelUI;
+    private GameObject textCoin;
 
     public GameObject prefabLevel;
-
+    private PlayerProfile playerProfile;
     void Awake()
     {
         instance = this;
         panelZoneUI = GameObject.Find("PanelZoneUI");
         panelLevelUI = GameObject.Find("PanelLevelUI");
+        textCoin = GameObject.Find("TextCoinUI");
 
         PlayerData.CreatePlayerProfile();
+
+        playerProfile = PlayerData.GetPlayerProfile();
     }
 
     void Start()
     {
         panelZoneUI.SetActive(true);
         panelLevelUI.SetActive(false);
+
+
+        textCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
     }
 
     public void SwitchZoneLevel(List<Level> levels)
