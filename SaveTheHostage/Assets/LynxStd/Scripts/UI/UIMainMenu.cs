@@ -16,6 +16,8 @@ public class UIMainMenu : MonoBehaviour {
         instance = this;
         panelZoneUI = GameObject.Find("PanelZoneUI");
         panelLevelUI = GameObject.Find("PanelLevelUI");
+
+        PlayerData.CreatePlayerProfile();
     }
 
     void Start()

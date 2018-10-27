@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Security.Cryptography;
 
-public class PlayerSave{
+public class PlayerData{
 
     
 
@@ -39,7 +39,6 @@ public class PlayerSave{
 
     public static void CreatePlayerProfile()
     {
-        Debug.Log(Application.persistentDataPath);
         if (!File.Exists(Application.persistentDataPath + "/Profile.bin"))
         {
             byte[] key = Convert.FromBase64String(Encryption.cryptoKey);

@@ -40,11 +40,12 @@ namespace NaStd
         private float timeShield;
         private float timeStamp;
 
+        private PlayerProfile playerProfile;
 
         void Awake()
         {
             instance = this;
-            //PlayerSave.CreatePlayerProfile();
+            playerProfile = PlayerData.GetPlayerProfile();
 
             totalCoin = GameObject.Find("TotalCoinUI");
             levelUIName = GameObject.Find("LevelNameUI");
@@ -60,8 +61,9 @@ namespace NaStd
             parentUIGameOver = GameObject.Find("PanelEndGameUI");
             parentUIGameScore = GameObject.Find("PanelSuccessGameUI");
 
-            //playerProfile = PlayerSave.GetPlayerProfile();
-            //totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+
+            totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+
             if (ZoneData.GetZoneData(levelSettings.zone) != null)
                 zone = (ZoneData.GetZoneData(levelSettings.zone));
 
@@ -79,6 +81,8 @@ namespace NaStd
             parentUIGameOver.SetActive(false);
             parentUIGameScore.SetActive(false);
             CreateUIItems();
+
+            Debug.Log(playerProfile.playerName);
 
         }
 
@@ -149,28 +153,35 @@ namespace NaStd
         IEnumerator WaitShowGameScore()
         {
             yield return new WaitForSeconds(0.25f);
-            //float persenScore = (float)(itemPickSize) / (float)(level.itemSize);
-            //float starPersen = persenScore * 100f;
-
-            //Debug.Log(itemPickSize + " | " + level.itemSize + " | " + starPersen);
-
             switch (itemPickSize)
             {
                 case 1:
                     starAnimator.SetTrigger("1Star");
                     if(!levelSettings.level.levelComplete && (itemPickSize > levelSettings.level.findItem))
+                    {
                         levelSettings.level.findItem = 1;
+                        playerProfile.playerCoin += levelSettings.starA;
+                    }
 
                     break;
                 case 2:
                     starAnimator.SetTrigger("2Star");
                     if (!levelSettings.level.levelComplete && (itemPickSize > levelSettings.level.findItem))
+                    {
                         levelSettings.level.findItem = 2;
+                        playerProfile.playerCoin += levelSettings.starB;
+                    }
                     break;
                 case 3:
                     starAnimator.SetTrigger("3Star");
                     levelSettings.level.findItem = 3;
+                    if (!levelSettings.level.levelComplete)
+                    {
+                        playerProfile.playerCoin += levelSettings.starC;
+                    }
+
                     levelSettings.level.levelComplete = true;
+
                     break;
             }
 
@@ -197,7 +208,8 @@ namespace NaStd
             }
 
             ZoneData.UpdateZoneData(zone);
-            //totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
+            PlayerData.UpdatePlayerProfile(playerProfile);
+            totalCoin.GetComponent<Text>().text = playerProfile.playerCoin.ToString();
 
         }
 

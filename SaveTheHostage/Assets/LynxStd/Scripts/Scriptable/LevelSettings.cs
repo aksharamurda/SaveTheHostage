@@ -7,11 +7,16 @@ using UnityEngine.UI;
 public class LevelSettings : ScriptableObject {
     public string zone;
     public string refLevelScene;
-
-    public Level level;
     public GameObject prefabItem;
     public int itemSize;
     public Sprite itemSprite;
     public bool haveShield;
 
+    [Header("Coin")]
+    public int starA;
+    public int starB;
+    public int starC;
+
+    [Header("Level")]
+    public Level level;
 }
