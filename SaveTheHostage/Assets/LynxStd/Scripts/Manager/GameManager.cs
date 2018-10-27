@@ -84,6 +84,7 @@ namespace NaStd
 
             Debug.Log(playerProfile.playerName);
 
+            GameObject.Find("PanelTutorialUI").SetActive(levelSettings.isTutorial);
         }
 
         void Update()
@@ -153,6 +154,10 @@ namespace NaStd
         IEnumerator WaitShowGameScore()
         {
             yield return new WaitForSeconds(0.25f);
+
+            if (levelSettings.isTutorial)
+                itemPickSize = 3;
+
             switch (itemPickSize)
             {
                 case 1:
@@ -162,6 +167,9 @@ namespace NaStd
                         levelSettings.level.findItem = 1;
                         playerProfile.playerCoin += levelSettings.starA;
                     }
+
+                    
+
 
                     break;
                 case 2:
@@ -185,7 +193,9 @@ namespace NaStd
                     break;
             }
 
-            for(int x=0; x < zone.levels.Count; x++)
+            
+
+            for (int x=0; x < zone.levels.Count; x++)
             {
                 if (zone.levels[x].levelName == levelSettings.refLevelScene)
                 {

@@ -11,6 +11,7 @@ public class LevelSettings : ScriptableObject {
     public int itemSize;
     public Sprite itemSprite;
     public bool haveShield;
+    public bool isTutorial;
 
     [Header("Coin")]
     public int starA;
