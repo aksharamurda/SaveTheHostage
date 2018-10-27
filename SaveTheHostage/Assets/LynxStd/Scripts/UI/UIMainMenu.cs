@@ -10,7 +10,6 @@ public class UIMainMenu : MonoBehaviour {
     private GameObject panelLevelUI;
 
     public GameObject prefabLevel;
-    public List<UIPanelZone> zonesPanel = new List<UIPanelZone>();
 
     void Awake()
     {
